@@ -49,6 +49,7 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
     -o /usr/bin/docker-compose
 chmod a+x /usr/bin/docker-compose
 
+mkdir env
 envfile="env/warden"
 
 addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
