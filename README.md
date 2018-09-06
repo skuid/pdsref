@@ -30,6 +30,18 @@ Answer yes `y` when it asks if you want to use the local postgres image.
 make start
 ```
 
+## Clean everything
+
+**Danger: this will delete all of your data. Use with caution**
+
+If you would like to completely start over, you can run:
+
+```bash
+make clean
+```
+
+This will stop and remove all of your running docker images, including ones that were not created by this script. Hopefully we'll add some more smarts to limit it to just our docker images in the future, but for now, beware. It will also drop your database data and remove the settings in your environment file.
+
 # Advanced mode 
 
 If you want to use your own postgres database, answer `N` to the two questions above. During the install it will prompt for the postgresql database information. During `make start`, it will not start a local postgres instance and sill instead rely on the values you provided.
