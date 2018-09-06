@@ -45,6 +45,9 @@ addUpdateLine2File() {
 }
 
 yum install docker
+
+service docker start
+
 curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) \
     -o /usr/bin/docker-compose
 chmod a+x /usr/bin/docker-compose
