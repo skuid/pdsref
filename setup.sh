@@ -44,6 +44,11 @@ addUpdateLine2File() {
     fi
 }
 
+yum install docker
+curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) \
+    -o /usr/bin/docker-compose
+chmod a+x /usr/bin/docker-compose
+
 envfile="env/warden"
 
 addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
