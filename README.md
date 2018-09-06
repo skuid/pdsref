@@ -62,4 +62,4 @@ This will stop and remove all of your running docker images, including ones that
 
 # Advanced mode 
 
-If you want to use your own postgres database, answer `N` to the two questions above. During the install it will prompt for the postgresql database information. During `make start`, it will not start a local postgres instance and sill instead rely on the values you provided.
+If you want to use your own postgres database, answer `N` to the two questions above. During the install it will prompt for the postgresql database information. During `make start`, it will not start a local postgres instance and will instead rely on the values you provided.
