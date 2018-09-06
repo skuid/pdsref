@@ -30,6 +30,24 @@ Answer yes `y` when it asks if you want to use the local postgres image.
 make start
 ```
 
+## Test it out
+
+You should see a 200/OK response from:
+
+```bash
+curl http://localhost/ping
+```
+
+And from this route:
+
+```bash
+curl http://localhost:3005/warden/ready
+```
+
+```javascript
+{"status": "ready"}
+```
+
 ## Clean everything
 
 **Danger: this will delete all of your data. Use with caution**
