@@ -1,0 +1,58 @@
+version: "2"
+services:
+  postgres:
+    container_name: wardenpg
+    image: postgres:10.5
+    ports:
+      - "5432:5432"
+    environment:
+      PGHOST: "postgres"
+      POSTGRES_PASSWORD: "wardenDBpass"
+      POSTGRES_USER: "warden"
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data"
+  redis:
+    image: redis:3.0.7
+    ports:
+      - "16379:6379"
+    volumes:
+      - "./redis:/var/lib/redis/data"
+  seaquill:
+    image: "quay.io/skuid/seaquill:master-1013"
+    ports:
+      - "3113:13113"
+    environment:
+      - NODE_ENV=production
+      - SEAQUILL_PORT=3113
+  warden:
+    image: "quay.io/skuid/warden:master-1302"
+    ports:
+      - "3004:3004"
+    env_file:
+      - ./env/warden
+    environment:
+      - WARDEN_PORT=3004
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - WARDEN_QUILL_ADDRESS=http://seaquill:3113
+      - WARDEN_AUTHCACHE_TTL=5s
+      - WARDEN_DATABASE_ON=true
+      - WARDEN_GZIP_LOAD_PROXY=true
+      - WARDEN_GZIP_LOAD_RESPONSE=true
+      - WARDEN_STREAM=true
+      - WARDEN_USE_KMS=false
+    depends_on:
+      - "redis"
+      - "seaquill"
+    links:
+      - "redis"
+      - "seaquill"
+  sluice:
+    image: quay.io/skuid/sluice:master-23
+    ports:
+      - "3005:3005"
+      - "80:80"
+    environment:
+      - WARDEN_HOST=http://warden:3004
+    links:
+      - "warden"
