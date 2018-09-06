@@ -57,11 +57,23 @@ envfile="env/warden"
 
 addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
 
-printf "Are you using your own postgres instance (y if you are, anything else if you're going to use the docker image provided in docker-compose)? [y|N]"
+printf "Would you like to start the local postgres image? [y|N] "
 read custompg
 
 if [ "${custompg}" == "y" ]
 then
+    pghost="postgres"
+    pgport=5432
+    pgdatabase="warden"
+    pguser="warden"
+    pgpassword="wardenDBpass"
+
+    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${envfile}"
+    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${envfile}"
+    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${envfile}"
+    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${envfile}"
+else
     printf "PGHOST: "
     read pghost
     printf "PGPORT: "
@@ -73,18 +85,6 @@ then
     printf "PGPASSWORD: "
     read -s pgpassword
     echo ""
-
-    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${envfile}"
-    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${envfile}"
-    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${envfile}"
-    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${envfile}"
-else
-    pghost="postgres"
-    pgport=5432
-    pgdatabase="warden"
-    pguser="warden"
-    pgpassword="wardenDBpass"
 
     addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${envfile}"
     addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${envfile}"

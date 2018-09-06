@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-printf "Would you like to start the local postgres image? [y|N]"
+printf "Would you like to start the local postgres image? [y|N] "
 read startpg
 
 if [ "${startpg}" == "y" ]

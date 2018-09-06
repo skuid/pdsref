@@ -2,13 +2,12 @@ version: "2"
 services:
   postgres:
     container_name: wardenpg
-    image: postgres:10.5
+    image: postgres:9.6
     ports:
       - "5432:5432"
     environment:
-      PGHOST: "postgres"
-      POSTGRES_PASSWORD: "wardenDBpass"
-      POSTGRES_USER: "warden"
+      - POSTGRES_USER=warden
+      - POSTGRES_PASSWORD=wardenDBpass
     volumes:
       - "./pgdata:/var/lib/postgresql/data"
   redis:
