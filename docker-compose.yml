@@ -3,21 +3,27 @@ services:
   postgres:
     container_name: wardenpg
     image: postgres:9.6
+    networks:
+      - pds
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=warden
       - POSTGRES_PASSWORD=wardenDBpass
     volumes:
-      - "./pgdata:/var/lib/postgresql/data"
+      - pds_pgdata:/var/lib/postgresql/data
   redis:
     image: redis:3.0.7
+    networks:
+      - pds
     ports:
       - "16379:6379"
     volumes:
       - "./redis:/var/lib/redis/data"
   seaquill:
     image: "quay.io/skuid/seaquill:master-1013"
+    networks:
+      - pds
     ports:
       - "3113:13113"
     environment:
@@ -25,6 +31,8 @@ services:
       - SEAQUILL_PORT=3113
   warden:
     image: "quay.io/skuid/warden:master-1302"
+    networks:
+      - pds
     ports:
       - "3004:3004"
     env_file:
@@ -48,6 +56,8 @@ services:
       - "seaquill"
   sluice:
     image: quay.io/skuid/sluice:master-23
+    networks:
+      - pds
     ports:
       - "3005:3005"
       - "80:80"
@@ -55,3 +65,10 @@ services:
       - WARDEN_HOST=http://warden:3004
     links:
       - "warden"
+
+networks:
+  pds:
+    driver: bridge
+
+volumes:
+  pds_pgdata:

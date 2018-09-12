@@ -40,11 +40,11 @@ addUpdateLine2File() {
         echo "$line" >> "$file"
     else
         echo "'$condition' already exists in $file. Replacing it instead"
-        sed -i '' "s|${condition}.*|$line|" $file
+        sed -i "s|${condition}.*|$line|" $file
     fi
 }
 
-yum install docker
+yum -y install docker
 
 service docker start
 
@@ -53,13 +53,13 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
 chmod a+x /usr/bin/docker-compose
 
 mkdir env
-envfile="env/warden"
 
 addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
 
 printf "Would you like to start the local postgres image? [y|N] "
 read custompg
 
+envfile="env/warden"
 if [ "${custompg}" == "y" ]
 then
     pghost="postgres"

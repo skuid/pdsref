@@ -5,15 +5,15 @@ read startpg
 
 if [ "${startpg}" == "y" ]
 then
-	source env/warden
-	docker-compose -p pds up -d postgres
+  source env/warden
+  docker-compose up -d postgres
 
-	while ! ./ready.sh 
-	do
-		sleep 5
-	done
+  while ! ./ready.sh
+  do
+    sleep 5
+  done
 fi
 
-docker-compose -p pds up -d redis seaquill
-docker-compose -p pds run --rm warden migrate up
-docker-compose -p pds up -d warden sluice
+docker-compose up -d redis seaquill
+docker-compose run --rm warden migrate up
+docker-compose up -d warden sluice
