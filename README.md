@@ -54,20 +54,20 @@ Here are some architecture diagrams.
 
 ## Proof of concept
 
-This is a quick POC way of running the Private Data Service (PDS) locally on an EC2 instance (or other VM). Running PDS in this way in a production setting is not advisable. We follow the (12 Factor App)[12factor] principles and will fail fast for unexpected error condtions with the expectation that the service will be restarted by an orchestration layer like (Kubernetes)[k8s].
+This is a quick POC way of running the Private Data Service (PDS) locally on an EC2 instance (or other VM). Running PDS in this way in a production setting is not advisable. We follow the [12 Factor App] principles and will fail fast for unexpected error condtions with the expectation that the service will be restarted by an orchestration layer like [Kubernetes].
 
 ![pocdiag]
 
 ## Reference
 
-This is a conceptual diagram showing how PDS might be run in production and is similar to how we run the data service microservices in our cloud offering, using (Kubernetes)[k8s] as the orchestration layer, log aggregators, and monitoring (which are not pictured here).
+This is a conceptual diagram showing how PDS might be run in production and is similar to how we run the data service microservices in our cloud offering, using [Kubernetes] as the orchestration layer, log aggregators, and monitoring (which are not pictured here).
 
 ![refdiag]
 
 [pocdiag]: https://github.com/skuid/pdsref/blob/master/imgs/poc.png "POC Diagram"
 [refdiag]: https://github.com/skuid/pdsref/blob/master/imgs/ref.png "Reference Diagram"
-[12factor]: https://12factor.net/ "12 Factor App"
-[k8s]: https://kubernetes.io/ "Kubernetes"
+[12 Factor App]: https://12factor.net/ "12 Factor App"
+[Kubernetes]: https://kubernetes.io/ "Kubernetes"
 
 ## Clean everything
 
