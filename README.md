@@ -48,6 +48,25 @@ curl http://localhost:3005/warden/ready
 {"status": "ready"}
 ```
 
+# Architecture
+
+Here are some architecture diagrams.
+
+## Proof of concept
+
+This is a quick POC way of running the Private Data Service (PDS) locally on an EC2 instance (or other VM).
+
+![pocdiag]
+
+## Reference
+
+This is a conceptual diagram showing how PDS might be run in production.
+
+![refdiag]
+
+[pocdiag]: https://github.com/skuid/pdsref/blob/master/imgs/poc.png "POC Diagram"
+[refdiag]: https://github.com/skuid/pdsref/blob/master/imgs/ref.png "Reference Diagram"
+
 ## Clean everything
 
 **Danger: this will delete all of your data. Use with caution**
