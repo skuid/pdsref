@@ -28,6 +28,7 @@ services:
       - CLORTHO_PORT=3009
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - DATADOG_ENABLED=false
     depends_on:
       - redis
     networks:
@@ -40,7 +41,9 @@ services:
       - "3005:3005"
       - "80:80"
     environment:
+      - SKUID_ENVIRONMENT=production
       - WARDEN_HOST=http://warden:3004
+      - DEBUG_LOGGING=true
   warden:
     image: "quay.io/skuid/warden:master-1642"
     networks:

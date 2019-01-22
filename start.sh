@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 printf "Would you like to start the local postgres images? [y|N] "
 read startpg
@@ -6,7 +7,7 @@ read startpg
 if [ "${startpg}" == "y" ]
 then
   source env/warden
-  docker-compose up -d -f docker-compose-dbs.yml
+  docker-compose up -f docker-compose-dbs.yml -d
 
   while ! ./ready.sh
   do
@@ -21,7 +22,12 @@ then
   done
 fi
 
-docker-compose up -d redis seaquill
+## We want to fail first trying to install the uuid extension, otherwise we get dirty migrations
+docker run --rm --network skuid_pds --env-file /opt/skuid/env/warden -it postgres:9.6 psql -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
+docker run --rm --network skuid_pds --env-file /opt/skuid/env/clortho -it postgres:9.6 psql -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'
+
+docker-compose run --rm clortho /bin/clortho migrate up
 docker-compose run --rm warden migrate up
-docker-compose run --rm clortho migrate up
+
+docker-compose up -d redis seaquill
 docker-compose up -d clortho warden sluice

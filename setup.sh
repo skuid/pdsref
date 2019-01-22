@@ -52,15 +52,15 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
     -o /usr/bin/docker-compose
 chmod a+x /usr/bin/docker-compose
 
+wardenfile="env/warden"
+clorthofile="env/clortho"
 mkdir env
 
-addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
+addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${wardenfile}"
 
 printf "Would you like to start the local postgres images? (select N if you are using external databases) [y|N] "
 read custompg
 
-wardenfile="env/warden"
-clorthofile="env/clortho"
 
 if [ "${custompg}" == "y" ]
 then
@@ -105,7 +105,7 @@ else
     addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${wardenfile}"
     addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${wardenfile}"
     addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${wardenfile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\"" "${wardenfile}"
 
     echo "Enter the database details for Clortho: -------"
     printf "PGHOST: "
@@ -124,7 +124,7 @@ else
     addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${clorthofile}"
     addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${clorthofile}"
     addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${clorthofile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\""" "${clorthofile}"
 fi
 
 
