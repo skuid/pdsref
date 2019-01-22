@@ -1,0 +1,34 @@
+version: "2"
+services:
+  warden_postgres:
+    container_name: warden_postgres
+    image: postgres:9.6
+    networks:
+      - pds
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=warden
+      - POSTGRES_PASSWORD=wardenDBpass
+    volumes:
+      - pds_warden_pgdata:/var/lib/postgresql/data
+  clortho_postgres:
+    container_name: clortho_postgres
+    image: postgres:9.6
+    networks:
+      - pds
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_USER=clortho
+      - POSTGRES_PASSWORD=clorthoDBpass
+    volumes:
+      - pds_clortho_pgdata:/var/lib/postgresql/data
+
+networks:
+  pds:
+    driver: bridge
+
+volumes:
+  pds_warden_pgdata:
+  pds_clortho_pgdata:

@@ -1,17 +1,5 @@
 version: "2"
 services:
-  postgres:
-    container_name: wardenpg
-    image: postgres:9.6
-    networks:
-      - pds
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=warden
-      - POSTGRES_PASSWORD=wardenDBpass
-    volumes:
-      - pds_pgdata:/var/lib/postgresql/data
   redis:
     image: redis:3.0.7
     networks:
@@ -19,18 +7,42 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - "./redis:/var/lib/redis/data"
+      - pds_redis:/var/lib/redis/data
   seaquill:
-    image: "quay.io/skuid/seaquill:master-1013"
+    image: quay.io/skuid/seaquill:master-1055
     networks:
       - pds
     ports:
       - "3113:3113"
     environment:
       - NODE_ENV=production
+      - NEW_RELIC_ENABLED=false
       - SEAQUILL_PORT=3113
+  clortho:
+    image: quay.io/skuid/clortho:master-22
+    ports:
+      - "3009:3009"
+    env_file:
+      - ./env/clortho
+    environment:
+      - CLORTHO_PORT=3009
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+    networks:
+      - pds
+  sluice:
+    image: quay.io/skuid/sluice:master-58
+    networks:
+      - pds
+    ports:
+      - "3005:3005"
+      - "80:80"
+    environment:
+      - WARDEN_HOST=http://warden:3004
   warden:
-    image: "quay.io/skuid/warden:master-1302"
+    image: "quay.io/skuid/warden:master-1642"
     networks:
       - pds
     ports:
@@ -42,33 +54,21 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - WARDEN_QUILL_ADDRESS=http://seaquill:3113
+      - WARDEN_CLORTHO_ADDRESS=http://clortho:3009
       - WARDEN_AUTHCACHE_TTL=5s
       - WARDEN_DATABASE_ON=true
       - WARDEN_GZIP_LOAD_PROXY=true
       - WARDEN_GZIP_LOAD_RESPONSE=true
       - WARDEN_STREAM=true
       - WARDEN_USE_KMS=false
+      - WARDEN_DATADOG_ENABLED=false
     depends_on:
       - "redis"
       - "seaquill"
-    links:
-      - "redis"
-      - "seaquill"
-  sluice:
-    image: quay.io/skuid/sluice:master-23
-    networks:
-      - pds
-    ports:
-      - "3005:3005"
-      - "80:80"
-    environment:
-      - WARDEN_HOST=http://warden:3004
-    links:
-      - "warden"
 
 networks:
   pds:
     driver: bridge
 
 volumes:
-  pds_pgdata:
+  pds_redis:
