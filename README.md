@@ -84,3 +84,36 @@ This will stop and remove all of your running docker images, including ones that
 # Advanced mode 
 
 If you want to use your own postgres database, answer `N` to the two questions above. During the install it will prompt for the postgresql database information. During `make start`, it will not start a local postgres instance and will instead rely on the values you provided.
+
+# Useful commands for diagnosing problems (and other things)
+
+To enter psql against clortho or warden (substituting out the appropriate environment variable file):
+
+```bash
+# Connect to clortho. Use a different environment variable file with the
+# PG[HOST|USER|DATABASE|PASSWORD] environment variables for the instance
+# to which you want to connect
+docker run --rm --network skuid_pds --env-file /opt/skuid/env/clortho -it postgres:9.6 psql
+```
+
+To run pg_dump:
+
+```bash
+# Dump warden's database
+docker run --rm --network skuid_pds --env-file /opt/skuid/env/warden postgres:9.6 pg_dump warden > warden_bak.sql
+```
+
+To restore a database using the docker image:
+
+```bash
+# Restore warden's database
+docker run --rm --network skuid_pds --env-file /opt/skuid/env/warden -v "/opt/skuid:/opt/skuid" -it postgres:9.6 psql -f /opt/skuid/warden_bak.sql
+```
+
+Connect to a running container:
+
+```bash
+# Connection to warden. Find the container name using 'docker ps'
+docker exec -ti skuid_warden_1 /bin/sh
+```
+
