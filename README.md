@@ -7,8 +7,7 @@ This provides an easy mode installation for the private data service. It will in
 As root, run the following in a terminal:
 
 ```bash
-curl -L https://github.com/skuid/pdsref/archive/master.tar.gz | \
-	tar --strip-components=1 -xzvf - -C /opt/skuid
+curl -L https://github.com/skuid/pdsref/archive/master.tar.gz | tar --strip-components=1 -xzvf - -C /opt/skuid
 ```
 # Usage
 
