@@ -52,28 +52,43 @@ curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compos
     -o /usr/bin/docker-compose
 chmod a+x /usr/bin/docker-compose
 
+wardenfile="env/warden"
+clorthofile="env/clortho"
 mkdir env
 
-addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${envfile}"
+addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${wardenfile}"
 
-printf "Would you like to start the local postgres image? [y|N] "
+printf "Would you like to start the local postgres images? (select N if you are using external databases) [y|N] "
 read custompg
 
-envfile="env/warden"
+
 if [ "${custompg}" == "y" ]
 then
-    pghost="postgres"
+    pghost="warden_postgres"
     pgport=5432
     pgdatabase="warden"
     pguser="warden"
     pgpassword="wardenDBpass"
 
-    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${envfile}"
-    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${envfile}"
-    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${envfile}"
-    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${envfile}"
+    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${wardenfile}"
+    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${wardenfile}"
+    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${wardenfile}"
+    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${wardenfile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${wardenfile}"
+
+    pghost="clortho_postgres"
+    pgport=6543
+    pgdatabase="clortho"
+    pguser="clortho"
+    pgpassword="clorthoDBpass"
+
+    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${clorthofile}"
+    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${clorthofile}"
+    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${clorthofile}"
+    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${clorthofile}"
 else
+    echo "Enter the database details for Warden: -------"
     printf "PGHOST: "
     read pghost
     printf "PGPORT: "
@@ -86,11 +101,30 @@ else
     read -s pgpassword
     echo ""
 
-    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${envfile}"
-    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${envfile}"
-    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${envfile}"
+    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${wardenfile}"
+    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${wardenfile}"
+    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${wardenfile}"
     addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${envfile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\"" "${wardenfile}"
+
+    echo "Enter the database details for Clortho: -------"
+    printf "PGHOST: "
+    read pghost
+    printf "PGPORT: "
+    read pgport
+    printf "PGDATABASE: "
+    read pgdatabase
+    printf "PGUSER: "
+    read pguser
+    printf "PGPASSWORD: "
+    read -s pgpassword
+    echo ""
+
+    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${clorthofile}"
+    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${clorthofile}"
+    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${clorthofile}"
+    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\""" "${clorthofile}"
 fi
 
 

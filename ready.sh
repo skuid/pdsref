@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-docker exec -it -e PGPASSWORD=wardenDBpass -e PGDATABASE=warden \
-	wardenpg pg_isready --host=localhost
+docker run --rm --network skuid_pds --env-file $1 -it postgres:9.6 pg_isready
