@@ -124,7 +124,7 @@ else
     addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${clorthofile}"
     addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${clorthofile}"
     addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\""" "${clorthofile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${clorthofile}"
 fi
 
 
