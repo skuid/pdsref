@@ -8,3 +8,6 @@ install:
 
 start:
 	@./start.sh
+
+upgrade:
+	@./upgrade.sh

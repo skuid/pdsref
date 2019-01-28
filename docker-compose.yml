@@ -9,7 +9,7 @@ services:
     volumes:
       - pds_redis:/var/lib/redis/data
   seaquill:
-    image: quay.io/skuid/seaquill:master-1055
+    image: quay.io/skuid/seaquill:master-1059
     networks:
       - pds
     ports:
@@ -45,7 +45,7 @@ services:
       - WARDEN_HOST=http://warden:3004
       - DEBUG_LOGGING=true
   warden:
-    image: "quay.io/skuid/warden:master-1642"
+    image: "quay.io/skuid/warden:master-1645"
     networks:
       - pds
     ports:
