@@ -15,7 +15,7 @@ Make sure you answer `y` to both `make install` and `make start`. The scripts ar
 
 ## Install dependencies and set environment
 
-Answer yes `y` when it asks if you want to use the local postgres image.
+`make install` will install the dependencies (like docker and docker-compose). It will also prompt for the database credentials for the Warden and Clortho persistence stores. Part of the install is to set the database encryption key. It should not overwrite this value.
 
 ```bash
 make install
@@ -23,7 +23,7 @@ make install
 
 ## Start it up
 
-Answer yes `y` when it asks if you want to use the local postgres image.
+Running `make start` will pull and start all of the docker images that make up the data services. These images will use the environment files created during `make install`.
 
 ```bash
 make start
@@ -45,6 +45,26 @@ curl http://localhost:3005/warden/ready
 
 ```javascript
 {"status": "ready"}
+```
+
+## Updating
+
+When there are new versions they will be changed in `docker-compose.yml`. To get the latest versions applied, just pull the latest from this repo and run `make upgrade`
+
+```bash
+curl -L https://github.com/skuid/pdsref/archive/master.tar.gz | tar --strip-components=1 -xzvf - -C /opt/skuid
+cd /opt/skuid
+make upgrade
+```
+
+# Using a local postgres docker image for Warden and Clortho
+
+If you would rather run two PostgreSQL docker images for the Warden and Clortho persistence stores, you can move `env/warden` and `env/clortho` (if they already exist) and run the following commands. `make dbinstall` will create the env files for Clortho and Warden. `make dbstart` will pull the images, start them up, and then wait for the databases to be ready.
+
+
+```bash
+make dbinstall
+make dbstart
 ```
 
 # Architecture
