@@ -11,3 +11,9 @@ start:
 
 upgrade:
 	@./upgrade.sh
+
+dbinstall:
+	@./localdb_install.sh
+
+dbstart:
+	@./localdb_start.sh

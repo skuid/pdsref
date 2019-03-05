@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-enckey=$(cat /dev/urandom | LC_ALL=C tr -c -d 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 ## Add a line to a file in a fairly idempotent way
 addLine2File() {
@@ -56,38 +55,21 @@ wardenfile="env/warden"
 clorthofile="env/clortho"
 mkdir env
 
-addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${wardenfile}"
+if [[ -f $wardenfile ]]; then
+    # ask user if they want to overwrite
+    printf "Environment variable file ${wardenfile} exists, would you like to overwrite? This will lose all of your current settings [y|N] "
+    read custompg
 
-printf "Would you like to start the local postgres images? (select N if you are using external databases) [y|N] "
-read custompg
-
-
-if [ "${custompg}" == "y" ]
-then
-    pghost="warden_postgres"
-    pgport=5432
-    pgdatabase="warden"
-    pguser="warden"
-    pgpassword="wardenDBpass"
-
-    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${wardenfile}"
-    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${wardenfile}"
-    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${wardenfile}"
-    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${wardenfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${wardenfile}"
-
-    pghost="clortho_postgres"
-    pgport=6543
-    pgdatabase="clortho"
-    pguser="clortho"
-    pgpassword="clorthoDBpass"
-
-    addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${clorthofile}"
-    addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${clorthofile}"
-    addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${clorthofile}"
-    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${clorthofile}"
+    if [ "${custompg}" == "y" ]; then
+        writewarden=1
+    fi
 else
+    writewarden=1
+    enckey=$(cat /dev/urandom | LC_ALL=C tr -c -d 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+    addLine2File "WARDEN_ENCRYPTION_KEY=" "WARDEN_ENCRYPTION_KEY=${enckey}" "${wardenfile}"
+fi
+
+if [[ $writewarden -eq 1 ]]; then
     echo "Enter the database details for Warden: -------"
     printf "PGHOST: "
     read pghost
@@ -104,9 +86,23 @@ else
     addUpdateLine2File "PGHOST=" "PGHOST=${pghost}" "${wardenfile}"
     addUpdateLine2File "PGPORT=" "PGPORT=${pgport}" "${wardenfile}"
     addUpdateLine2File "PGDATABASE=" "PGDATABASE=${pgdatabase}" "${wardenfile}"
-    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${envfile}"
-    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=\"${pgpassword}\"" "${wardenfile}"
+    addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${wardenfile}"
+    addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${wardenfile}"
+fi
 
+if [[ -f $clorthofile ]]; then
+    # ask user if they want to overwrite
+    printf "Environment variable file ${clorthofile} exists, would you like to overwrite? This will lose all of your current settings [y|N] "
+    read overwrite
+
+    if [ "${overwrite}" == "y" ]; then
+        writeclortho=1
+    fi
+else
+    writeclortho=1
+fi
+
+if [[ $writeclortho -eq 1 ]]; then
     echo "Enter the database details for Clortho: -------"
     printf "PGHOST: "
     read pghost
@@ -126,5 +122,3 @@ else
     addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${clorthofile}"
     addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${clorthofile}"
 fi
-
-
