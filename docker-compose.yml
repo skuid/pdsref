@@ -65,6 +65,8 @@ services:
       - WARDEN_STREAM=true
       - WARDEN_USE_KMS=false
       - WARDEN_DATADOG_ENABLED=false
+      - WARDEN_READ_TIMEOUT=0
+      - WARDEN_WRITE_TIMEOUT=0
     depends_on:
       - "redis"
       - "seaquill"
