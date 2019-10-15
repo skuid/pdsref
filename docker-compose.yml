@@ -45,7 +45,7 @@ services:
       - WARDEN_HOST=http://warden:3004
       - DEBUG_LOGGING=true
   warden:
-    image: "quay.io/skuid/warden:master-2058"
+    image: "quay.io/skuid/warden:master-2137"
     networks:
       - pds
     ports:
