@@ -46,7 +46,7 @@ addUpdateLine2File "PGUSER=" "PGUSER=${pguser}" "${wardenfile}"
 addUpdateLine2File "PGPASSWORD=" "PGPASSWORD=${pgpassword}" "${wardenfile}"
 
 pghost="clortho_postgres"
-pgport=6543
+pgport=5432
 pgdatabase="clortho"
 pguser="clortho"
 pgpassword="clorthoDBpass"
